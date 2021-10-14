@@ -1,0 +1,135 @@
+<!Doctype html>
+{% load static %}
+
+<html lang='ja' dir="ltr">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'invest/main_style.css' %}">
+    <title>Investment</title>
+  　</head>
+    <body>
+
+        <!-- ヘッダー -->
+        <div class="row top-bg">
+            <div class="col-md-3 text-center">
+                <h1>非裁量トレードシステム</h1>
+            </div>
+            <div class="col-md-6 text-left mt-4">
+                <h4>{{ year }}年{{ month }}月{{ day }}日</h4>
+            </div>
+            <div class="col-md-3 text-center mt-4">
+                <a href="">
+                    <h4>分析ページ</h4>
+                </a>
+            </div>
+        </div>
+
+        <!--  -->
+        <div class="row">
+            <div class="card">
+                <div class="in-card">
+                    
+                    <form class="form-inline" action="" method="post" autocomplete="off" style="margin-top:3%;">{% csrf_token %}
+                        <h2>トレード金額管理&nbsp;&nbsp;&nbsp;</h2><input type="submit" name='calculate' class="btn btn-primary" value="Webスクレイピング & アルゴリズム実行">
+                    </form>
+                    
+                    <form action="" method="post" autocomplete="off" style="margin-top:3%;">{% csrf_token %}
+                        
+                        <div class="form-inline">
+                            日付:
+                            {{ form.invest_date }}
+                        </div>
+                        <hr>
+                        <div class="form-inline">
+                            先進国 基準価額：
+                            {{ form.developed_price }}
+                            　　　先進国 購入額：
+                            {{ form.developed_invest }}
+                        </div>
+                        <hr>
+                        <div class="form-inline">
+                            日本　 基準価額：
+                            {{ form.topix_price }}
+                            　　　日本　 購入額：
+                            {{ form.topix_invest }}
+                        </div>
+                        <hr>
+                        <div class="form-inline">
+                            新興国 基準価額：
+                            {{ form.developing_price }}
+                            　　　新興国 購入額：
+                            {{ form.developing_invest }}
+                        </div>
+                        <hr>
+                        <div class="form-inline">
+                            全世界 基準価額：
+                            {{ form.all_price }}
+                            　　　全世界 購入額：
+                            {{ form.all_invest }}
+                            <hr><input type="submit" name='add' class="btn btn-primary" value="登録">
+                        </div>
+                    </form>                         
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="in-card">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="card">
+                <div class="in-card">
+                    <form class="form-inline" action="" method="post" autocomplete="off" style="margin-top:3%;">{% csrf_token %}
+                        {% csrf_token %}
+                        <h2>トレード履歴　　　</h2>
+                          <input type="text" id="select_month" name="extract" placeholder="年月を入力してください">
+                        <input type="submit" value="データ抽出">
+                    </form>
+
+                    <table style="table-layout:fixed;width:100%;margin-top:20px;">
+                        <thead class="pay_history">
+                            <tr>
+                                <th class="date">日付</th>
+                                <th class="developed">先進国</th>
+                                <th class="topix">日本</th>
+                                <th class="developing">新興国</th>
+                                <th class="all">全世界</th>
+                            </tr>
+                            <tr>
+                                <th class="date">合計</th>
+                                <th class="developed">{{ total_developed }}円</th>
+                                <th class="topix">{{ total_topix }}円</th>
+                                <th class="developing">{{ total_developing }}円</th>
+                                <th class="all">{{ total_all }}円</th>
+                            </tr>
+                        </thead>
+                        <tbody class="pay_history">
+                        {% for m in invest %}
+                            <tr class="table_data">
+                                <td class="date", id="table">{{ m.invest_date }}</td>
+                                <td class="developed", id="table">{{ m.developed_invest }}円</td>
+                                <td class="topix", id="table">{{ m.topix_invest }}円</td>
+                                <td class="developing", id="table">{{ m.developing_invest }}円</td>
+                                <td class="all", id="table">{{ m.all_invest }}円</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="in-card">
+                <h2>今月の総支出</h2>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>    
