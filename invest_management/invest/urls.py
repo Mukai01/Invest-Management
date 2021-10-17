@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path
-from . import views
+from .views import tradeview, analysisview
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('trade/', tradeview, name='trade'),
+    path('analysis/', analysisview, name='analysis'),
 ]

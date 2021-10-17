@@ -8,10 +8,10 @@ import re
 import pytz
 import datetime
 import calendar
-from .analysis_code import purchase_algorithm, invest_timeseries
+from .analysis_code import purchase_algorithm, invest_timeseries, per_predict
 
 # urls.pyから呼び出される
-def index(request):
+def tradeview(request):
     # 現在日時を取得
     today = str(timezone.now()+ datetime.timedelta(hours=9)).split('-')
     today_date = today[0]+'/'+today[1]+'/'+today[2][:2]
@@ -89,6 +89,41 @@ def index(request):
             
             # renderでページを表示
             return render(request, 'index.html', context)
+
+        elif "re-calculate" in request.POST:
+            print('再計算します...')
+            data = request.POST
+            # form情報を取得
+            topix_price = data['topix_price']
+            developed_price = data['developed_price']
+            developing_price = data['developing_price']
+            all_price = data['all_price']
+            
+            stock_dic, invest_base_dic, invest_algorithm_dic = purchase_algorithm.calculate_only(developed_price, topix_price, developing_price, all_price)
+            
+            # 初期値に設定
+            initial_dict = dict(invest_date=today_date, topix_price=stock_dic['japan'], topix_invest=round(invest_algorithm_dic['japan']/2),
+                developed_price=stock_dic['developed'], developed_invest=round(invest_algorithm_dic['developed']/2),
+                developing_price=stock_dic['developing'], developing_invest=round(invest_algorithm_dic['developing']/2),
+                all_price=stock_dic['all country'], all_invest=round(invest_algorithm_dic['all country']/2))
+            form = ExpenditureForm(request.GET or None, initial=initial_dict)
+
+            # contextを作り直す
+            context = {
+                'year' : today[0],
+                'month' : today[1],
+                'day' : today[2][:2],
+                'invest' : invest,
+                'form' : form,
+                'total_topix' : total_topix,
+                'total_developed' : total_developed,
+                'total_developing' : total_developing,
+                'total_all' : total_all,
+            }
+            
+            # renderでページを表示
+            return render(request, 'index.html', context)
+
         
         # 抽出ボタンが押されたとき
         elif "extract" in request.POST:
@@ -167,3 +202,31 @@ def index(request):
             return redirect(to = '/invest')
     # 何もボタンが押されていない場合
     return render(request, 'index.html', context)
+
+def analysisview(request):
+    # 現在日時を取得
+    today = str(timezone.now()+ datetime.timedelta(hours=9)).split('-')
+    today_date = today[0]+'/'+today[1]+'/'+today[2][:2]
+
+    # 年数が入力されたとき
+    if "predict_year" in request.POST:
+        data = request.POST
+        afteryears = int(data['predict_year'])
+    else:
+        afteryears=5
+
+    per_predict.random_forest_predict_byshillerper(afteryears)
+    per_predict.random_forest_predict_byper(afteryears)
+
+    # 初期値をformに引き継ぎ
+    form = ExpenditureForm()
+
+    # contextを作成
+    context = {
+        'year' : today[0],
+        'month' : today[1],
+        'day' : today[2][:2],
+        'form' : form,
+        'afteryears' : afteryears
+    }
+    return render(request, 'analysis.html', context)

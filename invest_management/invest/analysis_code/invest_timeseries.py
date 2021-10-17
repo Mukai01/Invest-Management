@@ -15,8 +15,8 @@ def make_invest_timeseries(df):
     # 型の変更
     df['invest_date'] = pd.to_datetime(df['invest_date'])
 
-    # もし今日よりも最終日が前だったら今日の日付を使用する
-    if df['invest_date'].max() > date.today():
+    # もし今日よりも最終日の月末が後だったら最終日の日付を使用する
+    if get_last_date(df['invest_date'].max()) >= date.today():
         last_date = df['invest_date'].max()
     else:
         last_date = get_last_date(df['invest_date'].max())
@@ -50,3 +50,21 @@ def make_invest_timeseries(df):
     plt.ylabel('投資額(万円)',fontsize=15)
     plt.grid()
     plt.savefig(str(BASE_DIR)+'/static/images/invest_timeseries.png')
+
+    # 基準価額の可視化
+    plt.rcParams['figure.subplot.bottom'] = 0.3
+    plt.rcParams['figure.subplot.top'] = 1
+    plt.figure(figsize=(10,3.5))
+
+    stock_list=['all_price', 'developed_price', 'topix_price', 'developing_price']
+    name_dic={'all_price':'全世界', 'developed_price': '先進国', 'topix_price':'日本', 'developing_price':'新興国'}
+    for i in stock_list:
+        temp = df.loc[df[i]>0,['index', i]]
+        plt.plot(temp['index'], temp[i], label = name_dic[i])
+
+    plt.legend(loc='upper left')
+    plt.xticks(rotation=90, fontsize=11)
+    plt.yticks(fontsize=12)
+    plt.ylabel('基準価額',fontsize=15)
+    plt.grid()
+    plt.savefig(str(BASE_DIR)+'/static/images/price_timeseries.png')

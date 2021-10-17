@@ -76,3 +76,50 @@ def calculate_algorithm():
     print("基準投資額:", invest_base_dic)
     print("計算購入額:", invest_algorithm_dic)
     return stock_dic, invest_base_dic, invest_algorithm_dic
+
+def calculate_only(developed_price, topix_price, developing_price, all_price):
+    # Target Portfolio
+    portfolio_dic = {
+        'developed':0.31875,
+        'japan':0.16875,
+        'developing':0.0125,
+        'all country':0.5,
+    }
+    
+    # 株の基準額
+    stock_base_dic = {
+        'developed':24159,
+        'japan':14917,
+        'developing':12748,
+        'all country':15698
+    }
+
+    # 名前リスト
+    name_list =["先進国", "日本", "新興国", "全世界"]
+    # 毎週の基準投資額
+    invest_per_week = 137416.6
+    
+    # 実行
+    stock_dic = {
+        'developed':int(developed_price),
+        'japan':int(topix_price),
+        'developing':int(developing_price),
+        'all country':int(all_price)
+    }
+        
+    # 購入額を計算    
+    invest_algorithm_dic = {}
+    invest_base_dic = {}
+    for i in stock_dic:
+        # 補正係数を計算
+        correction = 2**((1-stock_dic[i]/stock_base_dic[i])*10) 
+        # 補正係数をかける
+        invest_algorithm_dic[i] = invest_per_week * portfolio_dic[i] * correction
+        # 基準投資額も計算
+        invest_base_dic[i] =  invest_per_week * portfolio_dic[i]
+
+    # 結果を格納
+    print("基準価額:", stock_dic)
+    print("基準投資額:", invest_base_dic)
+    print("計算購入額:", invest_algorithm_dic)
+    return stock_dic, invest_base_dic, invest_algorithm_dic
