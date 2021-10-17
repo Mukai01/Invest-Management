@@ -17,13 +17,13 @@
 
         <!-- ヘッダー -->
         <div class="row top-bg">
-            <div class="col-md-3 text-center">
+            <div class="col-md-4 text-center">
                 <h1>非裁量トレードシステム</h1>
             </div>
             <div class="col-md-6 text-left mt-4">
                 <h4>{{ year }}年{{ month }}月{{ day }}日</h4>
             </div>
-            <div class="col-md-3 text-center mt-4">
+            <div class="col-md-2 text-center mt-4">
                 <a href="">
                     <h4>分析ページ</h4>
                 </a>
@@ -35,7 +35,7 @@
             <div class="card">
                 <div class="in-card">
                     
-                    <form class="form-inline" action="" method="post" autocomplete="off" style="margin-top:3%;">{% csrf_token %}
+                    <form class="form-inline" action="" method="post" autocomplete="off">{% csrf_token %}
                         <h2>トレード金額管理&nbsp;&nbsp;&nbsp;</h2><input type="submit" name='calculate' class="btn btn-primary" value="Webスクレイピング & アルゴリズム実行">
                     </form>
                     
@@ -52,21 +52,18 @@
                             　　　先進国 購入額：
                             {{ form.developed_invest }}
                         </div>
-                        <hr>
                         <div class="form-inline">
                             日本　 基準価額：
                             {{ form.topix_price }}
                             　　　日本　 購入額：
                             {{ form.topix_invest }}
                         </div>
-                        <hr>
                         <div class="form-inline">
                             新興国 基準価額：
                             {{ form.developing_price }}
                             　　　新興国 購入額：
                             {{ form.developing_invest }}
                         </div>
-                        <hr>
                         <div class="form-inline">
                             全世界 基準価額：
                             {{ form.all_price }}
@@ -80,6 +77,10 @@
 
             <div class="card">
                 <div class="in-card">
+                    <h2>トレード履歴 グラフ</h2>
+                    <div class="main">
+                        <img src="{% static 'images/invest_timeseries.png' %}" width=100%>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,10 +88,10 @@
         <div class="row">
             <div class="card">
                 <div class="in-card">
-                    <form class="form-inline" action="" method="post" autocomplete="off" style="margin-top:3%;">{% csrf_token %}
+                    <form class="form-inline" action="" method="post" autocomplete="off">{% csrf_token %}
                         {% csrf_token %}
                         <h2>トレード履歴　　　</h2>
-                          <input type="text" id="select_month" name="extract" placeholder="年月を入力してください">
+                          <input type="text" id="select_month" name="extract" placeholder="年月を入力してください" value={{ extract_input }}>
                         <input type="submit" value="データ抽出">
                     </form>
 

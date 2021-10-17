@@ -8,16 +8,25 @@ import re
 import pytz
 import datetime
 import calendar
-from .analysis_code import purchase_algorithm
+from .analysis_code import purchase_algorithm, invest_timeseries
 
 # urls.pyから呼び出される
 def index(request):
     # 現在日時を取得
-    today = str(timezone.now()).split('-')
+    today = str(timezone.now()+ datetime.timedelta(hours=9)).split('-')
     today_date = today[0]+'/'+today[1]+'/'+today[2][:2]
 
     # modelのInvestを読み込み
     invest = Invest.objects.order_by('invest_date' ).reverse()
+
+
+    # 投資の時系列グラフ化
+    from django_pandas.io import read_frame
+    import pandas as pd
+    df = read_frame(invest, fieldnames=['invest_date', 'topix_price', 'topix_invest', 'developed_price', 'developed_invest', 
+        'developing_price', 'developing_invest', 'all_price', 'all_invest'])
+    invest_timeseries.make_invest_timeseries(df)
+
     # dateの書式を変換、totalを計算
     total_topix = 0
     total_developed = 0
@@ -87,6 +96,10 @@ def index(request):
             # データを抽出
             invest = Invest.objects.filter(invest_date__month = data['extract'][4:], invest_date__year = data['extract'][:4]).order_by('invest_date').reverse()
 
+            df = read_frame(invest, fieldnames=['invest_date', 'topix_price', 'topix_invest', 'developed_price', 'developed_invest', 
+                'developing_price', 'developing_invest', 'all_price', 'all_invest'])
+            invest_timeseries.make_invest_timeseries(df)
+
             # dateの書式を変換、totalを計算
             total_topix = 0
             total_developed = 0
@@ -111,6 +124,7 @@ def index(request):
                 'total_developed' : total_developed,
                 'total_developing' : total_developing,
                 'total_all' : total_all,
+                'extract_input' : data['extract']
             }
 
             return render(request, 'index.html', context)
