@@ -36,8 +36,8 @@
                 <div class="in-card">
                     <form class="form-inline" action="" method="post" autocomplete="off">{% csrf_token %}
                         {% csrf_token %}
-                        <h2>Shiller PE Ratioによる{{ afteryears }}年後リターン予測　</h2>
-                            <input type="text" id="select_month" name="predict_year" placeholder="年数を入力してください" value={{ extract_input }}>
+                        <h2>Shiller PE Ratioによるリターン予測　</h2>
+                            <input type="text" id="select_month" name="predict_year" placeholder="年数を入力してください" value={{ afteryears }}>
                             &nbsp;&nbsp;
                         <input type="submit" class="btn btn-primary" value="更新">
                     </form>
@@ -50,7 +50,7 @@
             <!-- 右上-->
             <div class="card">
                 <div class="in-card">
-                    <h2>PE Ratioによる{{ afteryears }}年後リターン予測　</h2>
+                    <h2>PE Ratioによるリターン予測　</h2>
                     <div class="main">
                         <img src="{% static 'images/per_predict.png' %}" width=100%>
                     </div>
@@ -63,47 +63,21 @@
             <div class="card">
                 <div class="in-card">
                     <form class="form-inline" action="" method="post" autocomplete="off">{% csrf_token %}
-                        {% csrf_token %}
-                        <h2>トレード履歴　　　</h2>
-                          <input type="text" id="select_month" name="extract" placeholder="年月を入力してください" value={{ extract_input }}>
-                        <input type="submit" value="データ抽出">
+                        <h2>ランダムウォーク理論によるリターン予測　</h2>
+                            <input type="text" class ="simnum" id="select_month" name="sim_num" placeholder="回数" value={{ sim_num }}>
+                            回&nbsp;&nbsp;<input type="text" class ="year" id="select_month" name="sim_year" placeholder="年数" value={{ sim_year }}>
+                            年&nbsp;&nbsp;
+                        <input type="submit" class="btn btn-primary" value="シミュレーション">
                     </form>
-
-                    <table style="table-layout:fixed;width:100%;margin-top:20px;">
-                        <thead class="pay_history">
-                            <tr>
-                                <th class="date">日付</th>
-                                <th class="developed">先進国</th>
-                                <th class="topix">日本</th>
-                                <th class="developing">新興国</th>
-                                <th class="all">全世界</th>
-                            </tr>
-                            <tr>
-                                <th class="date">合計</th>
-                                <th class="developed">{{ total_developed }}円</th>
-                                <th class="topix">{{ total_topix }}円</th>
-                                <th class="developing">{{ total_developing }}円</th>
-                                <th class="all">{{ total_all }}円</th>
-                            </tr>
-                        </thead>
-                        <tbody class="pay_history">
-                        {% for m in invest %}
-                            <tr class="table_data">
-                                <td class="date", id="table">{{ m.invest_date }}</td>
-                                <td class="developed", id="table">{{ m.developed_invest }}円</td>
-                                <td class="topix", id="table">{{ m.topix_invest }}円</td>
-                                <td class="developing", id="table">{{ m.developing_invest }}円</td>
-                                <td class="all", id="table">{{ m.all_invest }}円</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="main">
+                        <img src="{% static 'images/random_predict.png' %}" width=100%>
+                    </div>
                 </div>
             </div>
             <!-- 右下 -->
             <div class="card">
                 <div class="in-card">
-                    <h2>トレード履歴 グラフ</h2>
+                    <h2>効率的フロンティアとの関係</h2>
                     <div class="main">
                         <img src="{% static 'images/invest_timeseries.png' %}" width=100%>
                     </div>

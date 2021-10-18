@@ -44,6 +44,14 @@ h4 {
   table-layout: fixed;
 }
 
+.year {
+  width: 50px;
+}
+
+.simnum {
+  width: 50px;
+}
+
 /* テーブルレイアウト */
 table.pay_histry {
   table-layout: fixed;

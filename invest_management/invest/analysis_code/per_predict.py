@@ -36,9 +36,9 @@ def get_per(url):
     return shiller_per_value
 
 def random_forest_predict_byshillerper(afteryears):
-    df=pd.read_excel('S and P PE Ratio.xlsx')
-    df1=pd.read_excel('S and P PE Ratio.xlsx', sheet_name='Shiller PE Ratio')
-    df2=pd.read_excel('S and P PE Ratio.xlsx', sheet_name='Stock Price')
+    df=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx')
+    df1=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='Shiller PE Ratio')
+    df2=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='Stock Price')
 
     # monthの作成
     df1['DateTime'] = pd.to_datetime(df1['DateTime'])
@@ -108,7 +108,7 @@ def random_forest_predict_byshillerper(afteryears):
     # グラフ化
     plt.rcParams["legend.framealpha"] = 1
     plt.rcParams['figure.subplot.bottom'] = 0.15
-    plt.rcParams['figure.subplot.top'] = 0.95
+    plt.rcParams['figure.subplot.top'] = 0.90
     plt.figure(figsize=(10,3.5))
     
 
@@ -119,6 +119,7 @@ def random_forest_predict_byshillerper(afteryears):
     plt.text(now_value+1,df4['afteryearsReturn'].max()/2,'Shiller PER =' + str(shiller_per_value) +'\npredict ='+str(round(estimate[0],2)),fontsize=13)
     plt.xlim([0,50])
     plt.legend()
+    plt.title('{}年後のリターン予測'.format(afteryears),fontsize=18)
     plt.xlabel('Shiller PE ratio',fontsize=15)
     plt.ylabel('{}年後のリターン(倍)'.format(afteryears),fontsize=15)
     plt.xticks(fontsize=11)
@@ -128,9 +129,9 @@ def random_forest_predict_byshillerper(afteryears):
     # plt.show()
 
 def random_forest_predict_byper(afteryears):
-    df=pd.read_excel('S and P PE Ratio.xlsx')
-    df1=pd.read_excel('S and P PE Ratio.xlsx', sheet_name='PE Ratio')
-    df2=pd.read_excel('S and P PE Ratio.xlsx', sheet_name='Stock Price')
+    df=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx')
+    df1=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='PE Ratio')
+    df2=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='Stock Price')
 
     # monthの作成
     df1['DateTime'] = pd.to_datetime(df1['DateTime'])
@@ -201,7 +202,7 @@ def random_forest_predict_byper(afteryears):
     # グラフ化
     plt.rcParams["legend.framealpha"] = 1
     plt.rcParams['figure.subplot.bottom'] = 0.15
-    plt.rcParams['figure.subplot.top'] = 0.95
+    plt.rcParams['figure.subplot.top'] = 0.90
     plt.figure(figsize=(10,3.5))
     
 
@@ -212,6 +213,7 @@ def random_forest_predict_byper(afteryears):
     plt.text(now_value+1,df4['afteryearsReturn'].max()/2,'PER =' + str(per_value) +'\npredict ='+str(round(estimate[0],2)),fontsize=13)
     plt.xlim([0,50])
     plt.legend()
+    plt.title('{}年後のリターン予測'.format(afteryears),fontsize=18)
     plt.xlabel('PE ratio',fontsize=15)
     plt.ylabel('{}年後のリターン(倍)'.format(afteryears),fontsize=15)
     plt.xticks(fontsize=11)

@@ -8,7 +8,7 @@ import re
 import pytz
 import datetime
 import calendar
-from .analysis_code import purchase_algorithm, invest_timeseries, per_predict
+from .analysis_code import purchase_algorithm, invest_timeseries, per_predict, random_predict
 
 # urls.pyから呼び出される
 def tradeview(request):
@@ -199,7 +199,7 @@ def tradeview(request):
                     all_invest = all_invest,
                     )
 
-            return redirect(to = '/invest')
+            return redirect(to = '/trade')
     # 何もボタンが押されていない場合
     return render(request, 'index.html', context)
 
@@ -212,14 +212,27 @@ def analysisview(request):
     if "predict_year" in request.POST:
         data = request.POST
         afteryears = int(data['predict_year'])
+
+        per_predict.random_forest_predict_byshillerper(afteryears)
+        per_predict.random_forest_predict_byper(afteryears)
+
     else:
         afteryears=5
 
-    per_predict.random_forest_predict_byshillerper(afteryears)
-    per_predict.random_forest_predict_byper(afteryears)
-
     # 初期値をformに引き継ぎ
     form = ExpenditureForm()
+    
+    # シミュレーション情報が入力されたとき
+    if "sim_num" in request.POST and "sim_year" in request.POST:
+        data = request.POST
+        sim_num = int(data['sim_num'])
+        sim_year = int(data['sim_year'])
+
+        random_predict.randomwalk_simulate(sim_num,sim_year)
+    
+    else:
+        sim_num = 100
+        sim_year = 5
 
     # contextを作成
     context = {
@@ -227,6 +240,9 @@ def analysisview(request):
         'month' : today[1],
         'day' : today[2][:2],
         'form' : form,
-        'afteryears' : afteryears
+        'afteryears' : afteryears,
+        'sim_num' : sim_num,
+        'sim_year' : sim_year,
     }
+   
     return render(request, 'analysis.html', context)
