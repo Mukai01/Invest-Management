@@ -18,10 +18,20 @@
         <!-- ヘッダー -->
         <div class="row top-bg">
             <div class="col-md-4 text-center">
-                <h1>株価分析システム</h1>
+                <h1>将来株価分析</h1>
             </div>
-            <div class="col-md-6 text-left mt-4">
+            <div class="col-md-2 text-left mt-4">
                 <h4>{{ year }}年{{ month }}月{{ day }}日</h4>
+            </div>
+            <div class="col-md-2 text-center mt-4">
+                <a href="{% url 'flow' %}">
+                    <h4>フロー管理ページ</h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center mt-4">
+                <a href="{% url 'asset' %}">
+                    <h4>資産管理ページ</h4>
+                </a>
             </div>
             <div class="col-md-2 text-center mt-4">
                 <a href="{% url 'trade' %}">
@@ -39,10 +49,10 @@
                         <h2>Shiller PE Ratioによるリターン予測　</h2>
                             <input type="text" id="select_month" name="predict_year" placeholder="年数を入力してください" value={{ afteryears }}>
                             &nbsp;&nbsp;
-                        <input type="submit" class="btn btn-primary" value="更新">
+                        <input type="submit" class="btn btn-primary" value="更新" >
                     </form>
                     <div class="main">
-                        <img src="{% static 'images/shiller_per_predict.png' %}" width=100%>
+                        <img src="{% static 'images/shiller_per_predict.png' %}?20211022" width=100%/>
                     </div>
                 </div>
             </div>
@@ -52,7 +62,7 @@
                 <div class="in-card">
                     <h2>PE Ratioによるリターン予測　</h2>
                     <div class="main">
-                        <img src="{% static 'images/per_predict.png' %}" width=100%>
+                        <img src="{% static 'images/per_predict.png' %}?20211022" width=100%/>
                     </div>
                 </div>
             </div>
@@ -67,19 +77,25 @@
                             <input type="text" class ="simnum" id="select_month" name="sim_num" placeholder="回数" value={{ sim_num }}>
                             回&nbsp;&nbsp;<input type="text" class ="year" id="select_month" name="sim_year" placeholder="年数" value={{ sim_year }}>
                             年&nbsp;&nbsp;
-                        <input type="submit" class="btn btn-primary" value="シミュレーション">
+                        <input type="submit" class="btn btn-primary" value="シミュレーション" >
                     </form>
                     <div class="main">
-                        <img src="{% static 'images/random_predict.png' %}" width=100%>
+                        <img src="{% static 'images/random_predict.png' %}?20211022" width=100%/>
                     </div>
                 </div>
             </div>
             <!-- 右下 -->
             <div class="card">
                 <div class="in-card">
-                    <h2>効率的フロンティアとの関係</h2>
+                    <form class="form-inline" action="" method="post" autocomplete="off">{% csrf_token %}
+                        <h2>効率的フロンティアとの関係　</h2>
+                            先進国：<input type="text" class ="simnum" id="portfolio" name="portfolio_1" placeholder="割合" value={{ developed_rate }}>
+                            &nbsp;&nbsp;国内：<input type="text" class ="simnum" id="portfolio" name="portfolio_2" placeholder="割合" value={{ japan_rate }}>
+                            &nbsp;&nbsp;新興国：<input type="text" class ="simnum" id="portfolio" name="portfolio_3" placeholder="割合" value={{ developing_rate }}>
+                            &nbsp;&nbsp;<input type="submit" class="btn btn-primary" value="計算">
+                    </form>
                     <div class="main">
-                        <img src="{% static 'images/invest_timeseries.png' %}" width=100%>
+                        <img src="{% static 'images/portfolio_calculate.png' %}?20211022" width=100%/>
                     </div>
                 </div>
             </div>

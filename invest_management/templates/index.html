@@ -18,10 +18,20 @@
         <!-- ヘッダー -->
         <div class="row top-bg">
             <div class="col-md-4 text-center">
-                <h1>非裁量トレードシステム</h1>
+                <h1>非裁量トレード</h1>
             </div>
-            <div class="col-md-6 text-left mt-4">
+            <div class="col-md-2 text-left mt-4">
                 <h4>{{ year }}年{{ month }}月{{ day }}日</h4>
+            </div>
+            <div class="col-md-2 text-center mt-4">
+                <a href="{% url 'flow' %}">
+                    <h4>フロー管理ページ</h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center mt-4">
+                <a href="{% url 'asset' %}">
+                    <h4>資産管理ページ</h4>
+                </a>
             </div>
             <div class="col-md-2 text-center mt-4">
                 <a href="{% url 'analysis' %}">

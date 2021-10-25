@@ -8,7 +8,8 @@ import re
 import pytz
 import datetime
 import calendar
-from .analysis_code import purchase_algorithm, invest_timeseries, per_predict, random_predict
+from .analysis_code import purchase_algorithm, invest_timeseries, per_predict, random_predict, asset_visualization, portfolio_calculate, flow_visualization
+import time
 
 # urls.pyから呼び出される
 def tradeview(request):
@@ -64,6 +65,8 @@ def tradeview(request):
     if request.method == 'POST': 
         # calculateボタンが押された場合
         if "calculate" in request.POST:
+            
+
             # アルゴリズムを動作
             stock_dic, invest_base_dic, invest_algorithm_dic = purchase_algorithm.calculate_algorithm()
 
@@ -203,7 +206,7 @@ def tradeview(request):
     # 何もボタンが押されていない場合
     return render(request, 'index.html', context)
 
-def analysisview(request):
+def analysisview(request):    
     # 現在日時を取得
     today = str(timezone.now()+ datetime.timedelta(hours=9)).split('-')
     today_date = today[0]+'/'+today[1]+'/'+today[2][:2]
@@ -234,6 +237,9 @@ def analysisview(request):
         sim_num = 100
         sim_year = 5
 
+    developed_rate, japan_rate, developing_rate = asset_visualization.visualization()
+    developed_rate, japan_rate, developing_rate = round(developed_rate,2), round(japan_rate,2), round(developing_rate,2)
+
     # contextを作成
     context = {
         'year' : today[0],
@@ -243,6 +249,67 @@ def analysisview(request):
         'afteryears' : afteryears,
         'sim_num' : sim_num,
         'sim_year' : sim_year,
+        'developed_rate' : developed_rate,
+        'japan_rate' : japan_rate,
+        'developing_rate' : developing_rate,
     }
-   
+
+    if "portfolio_1" in request.POST and "portfolio_2" in request.POST and "portfolio_3" in request.POST:
+        data = request.POST
+        developed_rate =float(data['portfolio_1'])
+        japan_rate = float(data['portfolio_2'])
+        developing_rate = float(data['portfolio_3'])
+        x_now=[0,0,0,0,0]
+        x_now[1] = japan_rate
+        x_now[3] = developed_rate
+        x_now[4] = developing_rate
+        print(x_now)
+        portfolio_calculate.portfolio_cal(x_now)
+
+        # contextを作成
+        context = {
+            'year' : today[0],
+            'month' : today[1],
+            'day' : today[2][:2],
+            'form' : form,
+            'afteryears' : afteryears,
+            'developed_rate' : developed_rate,
+            'japan_rate' : japan_rate,
+            'developing_rate' : developing_rate,
+        }
+
+
     return render(request, 'analysis.html', context)
+
+def assetview(request):
+    # グラフ作成
+    asset_visualization.visualization()
+
+    # 現在日時を取得
+    today = str(timezone.now()+ datetime.timedelta(hours=9)).split('-')
+    today_date = today[0]+'/'+today[1]+'/'+today[2][:2]
+
+
+    # contextを作成
+    context = {
+        'year' : today[0],
+        'month' : today[1],
+        'day' : today[2][:2],
+    }
+
+    return render(request, 'asset.html', context)
+
+def flowview(request):
+    flow_visualization.flow_visual()
+    # 現在日時を取得
+    today = str(timezone.now()+ datetime.timedelta(hours=9)).split('-')
+    today_date = today[0]+'/'+today[1]+'/'+today[2][:2]
+
+    # contextを作成
+    context = {
+        'year' : today[0],
+        'month' : today[1],
+        'day' : today[2][:2],
+    }
+
+    return render(request, 'flow.html', context)

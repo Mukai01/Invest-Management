@@ -44,7 +44,7 @@ def make_invest_timeseries(df):
     plt.figure(figsize=(10,3.3))
 
     plt.stackplot(df2.index,df2['all_invest'],df2['developed_invest'],df2['topix_invest'],df2['developing_invest'],labels=['全世界','先進国','日本','新興国'])
-    plt.legend(loc='upper left')
+    plt.legend(loc='upper left',fontsize=12)
     plt.xticks(rotation=90, fontsize=10)
     plt.yticks(fontsize=12)
     plt.ylabel('投資額(万円)',fontsize=15)
@@ -53,7 +53,7 @@ def make_invest_timeseries(df):
 
     # 基準価額の可視化
     plt.rcParams['figure.subplot.bottom'] = 0.3
-    plt.rcParams['figure.subplot.top'] = 1
+    plt.rcParams['figure.subplot.top'] = 0.95
     plt.figure(figsize=(10,3.5))
 
     stock_list=['all_price', 'developed_price', 'topix_price', 'developing_price']
@@ -62,7 +62,7 @@ def make_invest_timeseries(df):
         temp = df.loc[df[i]>0,['index', i]]
         plt.plot(temp['index'], temp[i], label = name_dic[i])
 
-    plt.legend(loc='upper left')
+    plt.legend(loc='upper left',fontsize=12)
     plt.xticks(rotation=90, fontsize=11)
     plt.yticks(fontsize=12)
     plt.ylabel('基準価額',fontsize=15)

@@ -1,0 +1,88 @@
+<!Doctype html>
+{% load static %}
+
+<html lang='ja' dir="ltr">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'invest/main_style.css' %}">
+    <title>Investment</title>
+  　</head>
+    <body>
+
+        <!-- ヘッダー -->
+        <div class="row top-bg">
+            <div class="col-md-4 text-center">
+                <h1>フロー管理</h1>
+            </div>
+            <div class="col-md-2 text-left mt-4">
+                <h4>{{ year }}年{{ month }}月{{ day }}日</h4>
+            </div>
+            <div class="col-md-2 text-center mt-4">
+                <a href="{% url 'asset' %}">
+                    <h4>資産管理ページ</h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center mt-4">
+                <a href="{% url 'trade' %}">
+                    <h4>トレードページ</h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center mt-4">
+                <a href="{% url 'analysis' %}">
+                    <h4>分析ページ</h4>
+                </a>
+            </div>
+        </div>
+
+        <!-- 左上  -->
+        <div class="row">
+            <div class="card">
+                <div class="in-card">
+                    <h2>フロー推移　</h2>
+                    <div class="main">
+                        <img src="{% static 'images/flow_visual.png' %}?20211022" width=100%/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右上-->
+            <div class="card">
+                <div class="in-card">
+                    <h2>給与推移　</h2>
+                    <div class="main">
+                        <img src="{% static 'images/income_visual.png' %}?20211022" width=100%/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 左下 -->
+        <div class="row">
+            <div class="card">
+                <div class="in-card">
+                    <h2>一時金推移　</h2>
+                    <div class="main">
+                        <img src="{% static 'images/income_visual_bonus.png' %}?20211022" width=100%/>
+                    </div>
+                </div>
+            </div>
+            <!-- 右下 -->
+            <div class="card">
+                <div class="in-card">
+                    <div class="in-card">
+                        <h2>年収推移　</h2>
+                        <div class="main">
+                            <img src="{% static 'images/income_visual_annual.png' %}?20211022" width=100%/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>    
