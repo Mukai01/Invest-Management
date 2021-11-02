@@ -23,12 +23,13 @@ def make_invest_timeseries(df):
 
     # カレンダーを作成し結合
     dates_DF = pd.DataFrame(index=pd.date_range(df['invest_date'].min()-timedelta(days=1), last_date, freq='D'))
-    df=df.set_index('invest_date')
-    df=pd.merge(dates_DF,df,how='left',right_index=True, left_index=True)
+    df = df.set_index('invest_date')
+    df = pd.merge(dates_DF,df,how='left',right_index=True, left_index=True)
 
     # 欠損値処理
     df = df.fillna(0)
-    df=df.reset_index()
+    df = df.reset_index()
+    # display(df)
 
     # 集計
     df2 = df.groupby('index').sum()
@@ -37,7 +38,8 @@ def make_invest_timeseries(df):
     for i in df2.columns:
         df2[i] = df2[i].cumsum()
         df2[i] = df2[i]/10000
-        
+    # display(df2)
+
     # 可視化
     plt.rcParams['figure.subplot.bottom'] = 0.3
     plt.rcParams['figure.subplot.top'] = 0.95
@@ -50,6 +52,7 @@ def make_invest_timeseries(df):
     plt.ylabel('投資額(万円)',fontsize=15)
     plt.grid()
     plt.savefig(str(BASE_DIR)+'/static/images/invest_timeseries.png')
+    # plt.show()
 
     # 基準価額の可視化
     plt.rcParams['figure.subplot.bottom'] = 0.3
@@ -68,3 +71,4 @@ def make_invest_timeseries(df):
     plt.ylabel('基準価額',fontsize=15)
     plt.grid()
     plt.savefig(str(BASE_DIR)+'/static/images/price_timeseries.png')
+    # plt.show()

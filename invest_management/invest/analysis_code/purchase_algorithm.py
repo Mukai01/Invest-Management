@@ -39,7 +39,7 @@ def calculate_algorithm():
         'developing':0.0125,
         'all country':0.5,
     }
-    
+
     # 株の基準額
     stock_base_dic = {
         'developed':24159,
@@ -52,14 +52,14 @@ def calculate_algorithm():
     name_list =["先進国", "日本", "新興国", "全世界"]
     # 毎週の基準投資額
     invest_per_week = 137416.6
-    
+
     # 実行
     stock_dic = {}
     for i in url_dic:
         stock_value = get_stockvalue(url_dic[i])
         stock_dic[i] = stock_value
-        print('{}の基準価額は{}でした...'.format(i, stock_dic[i]))
-        
+        # print('{}の基準価額は{}でした...'.format(i, stock_dic[i]))
+
     # 購入額を計算    
     invest_algorithm_dic = {}
     invest_base_dic = {}
@@ -72,9 +72,9 @@ def calculate_algorithm():
         invest_base_dic[i] =  invest_per_week * portfolio_dic[i]
 
     # 結果を格納
-    print("基準価額:", stock_dic)
-    print("基準投資額:", invest_base_dic)
-    print("計算購入額:", invest_algorithm_dic)
+    # print("基準価額:", stock_dic)
+    # print("基準投資額:", invest_base_dic)
+    # print("計算購入額:", invest_algorithm_dic)
     return stock_dic, invest_base_dic, invest_algorithm_dic
 
 def calculate_only(developed_price, topix_price, developing_price, all_price):
@@ -85,7 +85,7 @@ def calculate_only(developed_price, topix_price, developing_price, all_price):
         'developing':0.0125,
         'all country':0.5,
     }
-    
+
     # 株の基準額
     stock_base_dic = {
         'developed':24159,
@@ -98,7 +98,7 @@ def calculate_only(developed_price, topix_price, developing_price, all_price):
     name_list =["先進国", "日本", "新興国", "全世界"]
     # 毎週の基準投資額
     invest_per_week = 137416.6
-    
+
     # 実行
     stock_dic = {
         'developed':int(developed_price),
@@ -106,7 +106,7 @@ def calculate_only(developed_price, topix_price, developing_price, all_price):
         'developing':int(developing_price),
         'all country':int(all_price)
     }
-        
+
     # 購入額を計算    
     invest_algorithm_dic = {}
     invest_base_dic = {}
@@ -119,7 +119,7 @@ def calculate_only(developed_price, topix_price, developing_price, all_price):
         invest_base_dic[i] =  invest_per_week * portfolio_dic[i]
 
     # 結果を格納
-    print("基準価額:", stock_dic)
-    print("基準投資額:", invest_base_dic)
-    print("計算購入額:", invest_algorithm_dic)
+    # print("基準価額:", stock_dic)
+    # print("基準投資額:", invest_base_dic)
+    # print("計算購入額:", invest_algorithm_dic)
     return stock_dic, invest_base_dic, invest_algorithm_dic

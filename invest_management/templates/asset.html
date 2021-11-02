@@ -44,7 +44,10 @@
         <div class="row">
             <div class="card">
                 <div class="in-card">
-                    <h2>総資産の推移　</h2>
+                    <form class="form-inline" action="" method="post" autocomplete="off">{% csrf_token %}
+                        <h2>総資産の推移　</h2>
+                        <input type="submit" class="btn btn-primary" name="update" value="更新" >
+                    </form>
                     <div class="main">
                         <img src="{% static 'images/asset_timeseries.png' %}?20211022" width=100%/>
                     </div>

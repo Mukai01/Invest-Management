@@ -8,6 +8,9 @@ from scipy.stats import norm
 import seaborn as sns
 from scipy.stats import t
 from scipy import stats
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import OneClassSVM
+from tqdm import tqdm
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -29,9 +32,10 @@ def make_return(loc1, loc2, scale1, scale2):
     return a,svm_result
 
 def randomwalk_simulate(sim_num, years):
-    file=str(BASE_DIR)+'/invest/analysis_code/data/FTOPIX.xlsx'
+    # ファイル読み込み
+    file='C:/Users/nakam/Dropbox/資産/Django/data/FTOPIX.xlsx'
     df=pd.read_excel(file)
-    
+
     #出来高は不要なので削除
     del df['出来高']
 
@@ -50,17 +54,16 @@ def randomwalk_simulate(sim_num, years):
 
     df=df.dropna()
     df=df[['日付', '終値', '前日比率', 'ボラティリティ']]
+    # display(df)
 
     #正規化を実施
     X_train=df[['前日比率','ボラティリティ']]
 
-    from sklearn.preprocessing import StandardScaler
     sc = StandardScaler()
     X_train_std = sc.fit_transform(X_train)
     X_train_std
 
     #one class svmでデータを正常・異常に分ける
-    from sklearn.svm import OneClassSVM
     clf = OneClassSVM(nu=0.05, kernel='rbf', gamma=0.5)
     clf.fit(X_train_std)
     pred = clf.predict(X_train_std)
@@ -68,15 +71,13 @@ def randomwalk_simulate(sim_num, years):
     X_train['svm']=pred
 
     #正規分布を推定
-    loc, scale = norm.fit(df['前日比率'])
-
-    df_temp_1=X_train[X_train['svm']==1]
+    df_temp = X_train[X_train['svm']==1]
+    loc, scale = norm.fit(df_temp['前日比率'].dropna())
+    df_temp_1=X_train[X_train['svm']==-1]
     loc1, scale1 = norm.fit(df_temp_1['前日比率'].dropna())
 
     #結果の箱を作成
     df_sim1=pd.DataFrame()
-
-    from tqdm import tqdm
 
     #1000回シミュレーションを実行
     for j in tqdm(range(sim_num)):
@@ -91,13 +92,14 @@ def randomwalk_simulate(sim_num, years):
 
     #累積リターンを計算
     df_sim2=df_sim1.cumprod()
-    
+    # display(df_sim2)
+
     #結果を可視化
     plt.rcParams["legend.framealpha"] = 1
     plt.rcParams['figure.subplot.bottom'] = 0.15
     plt.rcParams['figure.subplot.top'] = 0.90
     plt.figure(figsize=(10,3.5))
-    
+
     num=0
     for i in df_sim2.columns:
         temp=df_sim2[i].iloc[:240*years]
@@ -115,6 +117,7 @@ def randomwalk_simulate(sim_num, years):
     plt.xticks(fontsize=11)
     plt.yticks(fontsize=12)
     plt.grid()
-    
+
     plt.savefig(str(BASE_DIR)+'/static/images/random_predict.png')
+    # plt.show()
     return df_sim2

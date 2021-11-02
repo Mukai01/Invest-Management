@@ -36,9 +36,10 @@ def get_per(url):
     return shiller_per_value
 
 def random_forest_predict_byshillerper(afteryears):
-    df=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx')
-    df1=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='Shiller PE Ratio')
-    df2=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='Stock Price')
+    # データ読み込み
+    df=pd.read_excel('C:/Users/nakam/Dropbox/資産/Django/data/S and P PE Ratio.xlsx')
+    df1=pd.read_excel('C:/Users/nakam/Dropbox/資産/Django/data/S and P PE Ratio.xlsx', sheet_name='Shiller PE Ratio')
+    df2=pd.read_excel('C:/Users/nakam/Dropbox/資産/Django/data/S and P PE Ratio.xlsx', sheet_name='Stock Price')
 
     # monthの作成
     df1['DateTime'] = pd.to_datetime(df1['DateTime'])
@@ -56,8 +57,9 @@ def random_forest_predict_byshillerper(afteryears):
     df3=pd.merge(df3,df1,how='left',on='Month')
     df3=df3.sort_values('DateTime_x')
     df3=df3.reset_index(drop=True)
+    # display(df3)
 
-    # 5年後のリターンを計算
+    # 数年後のリターンを計算
     df3['afteryears']=0
     for i in range(len(df3)):
         now_month = df3.loc[i, 'Month']
@@ -69,7 +71,7 @@ def random_forest_predict_byshillerper(afteryears):
             df3.loc[i,"afteryears"] = df3[df3['Month']==after_month]['S&P 500'].values[0]
         except IndexError:
             continue
-            
+
     # 数年後リターンの計算
     df3['afteryearsReturn'] = df3['afteryears'] / df3["S&P 500"]
 
@@ -77,30 +79,32 @@ def random_forest_predict_byshillerper(afteryears):
     df4=df3[df3['afteryearsReturn']!=0]
     df4=df4[df4['DateTime_x']>pd.to_datetime('1980-01-01')]
     df4=df4.reset_index(drop=True)
-    
+    # display(df4)
+
     # 学習用データの作成
     x_train = df4['Shiller PE Ratio'].values
     y_train = df4['afteryearsReturn'].values
     x_train = x_train.reshape(-1,1)
 
-#     # GridSearchでパラメータ決定
-#     param_grid = {'n_estimators': [1,2,3,4,5,6,7,8,9,10], 'max_depth': [1,2,3,4,5,6,7,8,9,10]}
-#     grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, verbose = 2)
-#     grid_search.fit(x_train,y_train)
-    
-#     # ヒートマップの作成
-#     results = pd.DataFrame(grid_search.cv_results_)
-#     scores = np.array(results.mean_test_score).reshape(10, 10)
-#     mglearn.tools.heatmap(scores, xlabel='n_estimators', xticklabels=param_grid['n_estimators'],
-#                       ylabel='max_depth', yticklabels=param_grid['max_depth'], cmap="viridis", fmt='%0.1f')
-#     plt.show()
-    
+    # # GridSearchでパラメータ決定
+    # param_grid = {'n_estimators': [1,2,3,4,5,6,7,8,9,10], 'max_depth': [1,2,3,4,5,6,7,8,9,10]}
+    # grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, verbose = 2)
+    # grid_search.fit(x_train,y_train)
+
+    # # ヒートマップの作成
+    # results = pd.DataFrame(grid_search.cv_results_)
+    # scores = np.array(results.mean_test_score).reshape(10, 10)
+    # mglearn.tools.heatmap(scores, xlabel='n_estimators', xticklabels=param_grid['n_estimators'],
+    #                   ylabel='max_depth', yticklabels=param_grid['max_depth'], cmap="viridis", fmt='%0.1f')
+    # plt.show()
+        
     # ランダムフォレストによる予測
     rfr = RandomForestRegressor(n_estimators=8,max_depth = 3, random_state=5)
     rfr.fit(x_train,y_train)
     x_test = np.linspace(8,50,1000).reshape(-1,1)
     predict = rfr.predict(x_test)
-    
+
+    # 現在のPerを計算に使用する
     shiller_per_value = get_per(shiller_url)
     now_value=np.array(shiller_per_value).reshape(-1,1)
     estimate=rfr.predict(now_value)
@@ -110,7 +114,6 @@ def random_forest_predict_byshillerper(afteryears):
     plt.rcParams['figure.subplot.bottom'] = 0.15
     plt.rcParams['figure.subplot.top'] = 0.90
     plt.figure(figsize=(10,3.5))
-    
 
     plt.scatter(df4['Shiller PE Ratio'],df4['afteryearsReturn'],s=100,alpha=0.2, label='Since 1980/01/01')
     plt.vlines([shiller_per_value],0.5,df4['afteryearsReturn'].max(),color='black', label='Current Shiller PE Ratio')
@@ -129,9 +132,10 @@ def random_forest_predict_byshillerper(afteryears):
     # plt.show()
 
 def random_forest_predict_byper(afteryears):
-    df=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx')
-    df1=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='PE Ratio')
-    df2=pd.read_excel(str(BASE_DIR)+'/invest/analysis_code/data/S and P PE Ratio.xlsx', sheet_name='Stock Price')
+    # データ読み込み
+    df=pd.read_excel('C:/Users/nakam/Dropbox/資産/Django/data/S and P PE Ratio.xlsx')
+    df1=pd.read_excel('C:/Users/nakam/Dropbox/資産/Django/data/S and P PE Ratio.xlsx', sheet_name='PE Ratio')
+    df2=pd.read_excel('C:/Users/nakam/Dropbox/資産/Django/data/S and P PE Ratio.xlsx', sheet_name='Stock Price')
 
     # monthの作成
     df1['DateTime'] = pd.to_datetime(df1['DateTime'])
@@ -162,49 +166,50 @@ def random_forest_predict_byper(afteryears):
             df3.loc[i,"afteryears"] = df3[df3['Month']==after_month]['S&P 500'].values[0]
         except IndexError:
             continue
-            
+
     # 数年後リターンの計算
     df3['afteryearsReturn'] = df3['afteryears'] / df3["S&P 500"]
 
     # リターンが0以外のもののみ抽出
-    print(df3.columns)
     df4=df3[df3['afteryearsReturn']!=0]
     df4=df4[df4['DateTime_x']>pd.to_datetime('1980-01-01')]
     df4=df4.reset_index(drop=True)
-    
+    # display(df4)
+
     # 学習用データの作成
     x_train = df4['PE Ratio_x'].values
     y_train = df4['afteryearsReturn'].values
     x_train = x_train.reshape(-1,1)
 
-#     # GridSearchでパラメータ決定
-#     param_grid = {'n_estimators': [1,2,3,4,5,6,7,8,9,10], 'max_depth': [1,2,3,4,5,6,7,8,9,10]}
-#     grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, verbose = 2)
-#     grid_search.fit(x_train,y_train)
-    
-#     # ヒートマップの作成
-#     results = pd.DataFrame(grid_search.cv_results_)
-#     scores = np.array(results.mean_test_score).reshape(10, 10)
-#     mglearn.tools.heatmap(scores, xlabel='n_estimators', xticklabels=param_grid['n_estimators'],
-#                       ylabel='max_depth', yticklabels=param_grid['max_depth'], cmap="viridis", fmt='%0.1f')
-#     plt.show()
-    
+    #     # GridSearchでパラメータ決定
+    #     param_grid = {'n_estimators': [1,2,3,4,5,6,7,8,9,10], 'max_depth': [1,2,3,4,5,6,7,8,9,10]}
+    #     grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, verbose = 2)
+    #     grid_search.fit(x_train,y_train)
+
+    #     # ヒートマップの作成
+    #     results = pd.DataFrame(grid_search.cv_results_)
+    #     scores = np.array(results.mean_test_score).reshape(10, 10)
+    #     mglearn.tools.heatmap(scores, xlabel='n_estimators', xticklabels=param_grid['n_estimators'],
+    #                       ylabel='max_depth', yticklabels=param_grid['max_depth'], cmap="viridis", fmt='%0.1f')
+    #     plt.show()
+
     # ランダムフォレストによる予測
     rfr = RandomForestRegressor(n_estimators=10,max_depth = 2, random_state=5)
     rfr.fit(x_train,y_train)
     x_test = np.linspace(8,50,1000).reshape(-1,1)
     predict = rfr.predict(x_test)
-    
+
+    # 現在のPerを計算に使用する
     per_value = get_per(per_url)
-    now_value=np.array(per_value).reshape(-1,1)
-    estimate=rfr.predict(now_value)
+    now_value = np.array(per_value).reshape(-1,1)
+    estimate = rfr.predict(now_value)
 
     # グラフ化
     plt.rcParams["legend.framealpha"] = 1
     plt.rcParams['figure.subplot.bottom'] = 0.15
     plt.rcParams['figure.subplot.top'] = 0.90
     plt.figure(figsize=(10,3.5))
-    
+
 
     plt.scatter(df4['PE Ratio_x'],df4['afteryearsReturn'],s=100,alpha=0.2, label='Since 1980/01/01')
     plt.vlines([per_value],0.5,df4['afteryearsReturn'].max(),color='black', label='Current PE Ratio')
